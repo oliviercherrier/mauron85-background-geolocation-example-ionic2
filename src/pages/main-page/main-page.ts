@@ -24,7 +24,6 @@ export class MainPage {
   path: any;
   isTracking: any;
   postingEnabled: any;
-  location: any;
   online: any;
   toggle: any;
   pace: any;
@@ -48,8 +47,6 @@ export class MainPage {
     }
 
 
-
-    this.location = undefined;
     this.path = undefined;
     this.locations = [];
     this.isTracking = false;
@@ -81,7 +78,9 @@ export class MainPage {
     this.events.subscribe('bgeo_callback:location',
       (location) => {
         try {
-          this.setCurrentLocation(location);
+          console.log("!!!DEMO : INFO: Set Current Location from bgeo_callback");
+          console.log(location);
+          this.setCurrentLocation(location[0]);
         } catch (e) {
           console.error('!!!DEMO : ERROR: setting location', e.message);
         }
@@ -193,8 +192,8 @@ export class MainPage {
 
   // Update screen according to new location
   setCurrentLocation(location) {
-    console.log("!!!DEMO : setCurrentLocation, location: { " + location.latitude + ", ", location.longitude + "}");
-
+    console.log("!!!DEMO : setCurrentLocation, location: { " + Number(location["latitude"]) + ", ", Number(location["longitude"]) + "}");
+    console.log(location);
     // Draw path into map
   }
 
