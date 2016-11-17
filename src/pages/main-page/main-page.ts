@@ -1,5 +1,4 @@
-import {NavController,  Events, Platform} from 'ionic-angular';
-// import {Toast} from 'ionic-angular';
+import {NavController, Toast, Events, Platform, App} from 'ionic-angular';
 import { Component } from '@angular/core';
 import {BackgroundGeolocation, Geolocation} from 'ionic-native';
 import {Dialogs} from 'ionic-native';
@@ -14,9 +13,11 @@ let TIMEOUT = 3;
   templateUrl: 'main-page.html'
 })
 export class MainPage {
-  map: any;
-  nav: any;
-  events: any;
+  private app: App;
+  private map: any;
+  private nav: NavController;
+  private events: Events;
+
   options: any;
   is_not_android: any;
   locations: any;
@@ -34,17 +35,19 @@ export class MainPage {
   static get parameters() {
     return [[NavController], [Events], [Platform]];
   }
-  constructor(nav: NavController, events: Events, platform: Platform) {
-    this.map = null;
-    this.nav = nav;
-    this.events = events;
+  constructor(_nav: NavController, _events: Events, _platform: Platform, _app: App) {
+    this.app = _app;
+    this.nav = _nav;
+    this.events = _events;
+    this.is_not_android = !_platform.is('android');
+
     this.options = {
       timeout: 10000,
       enableHighAccuracy: true,
       maximumAge: 30000
     }
 
-    this.is_not_android = !platform.is('android');
+
 
     this.location = undefined;
     this.path = undefined;
@@ -65,18 +68,17 @@ export class MainPage {
       color: 'secondary'
     }
 
-    //this.bindEvents();
+    this.bindEvents();
 
   }
 
   ionViewDidEnter (){
-    let mymap = L.map('mapid').setView([51.505, -0.09], 13);
-    L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png").addTo(mymap);
+    this.map = L.map('mapid').setView([51.505, -0.09], 13);
+    L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png").addTo(this.map);
   }
 
   bindEvents() {
-
-    /*this.events.subscribe('bgeo_callback:location',
+    this.events.subscribe('bgeo_callback:location',
       (location) => {
         try {
           this.setCurrentLocation(location);
@@ -84,20 +86,14 @@ export class MainPage {
           console.error('!!!DEMO : ERROR: setting location', e.message);
         }
       }
-    );*/
+    );
   }
 
 
   showToast(msg) {
-    /*let toast = Toast.create({
-      message: msg,
-      duration: 2000
-    });
-    this.nav.present(toast);*/
-  }
-
-  onPageLoaded() {
-
+    let toast = new Toast(this.app);
+    toast.setMessage(msg);
+    toast.present();
   }
 
   onClickToogleEnabled() {
@@ -164,9 +160,10 @@ export class MainPage {
     Geolocation.getCurrentPosition(this.options)
       .then((resp) => {
         console.log("!!!DEMO : Geolocation : " + resp.coords.latitude + ", " + resp.coords.longitude);
-        // center on the location
-        this.map.setCenter({lat: resp.coords.latitude, lng: resp.coords.longitude});
         this.showToast("Your location is : "+ resp.coords.longitude + ", " + resp.coords.latitude);
+
+        // center on the location
+        this.map.setView([resp.coords.latitude, resp.coords.longitude],13)
         this.setCurrentLocation(resp.coords);
       })
       .catch((error) => {
@@ -194,7 +191,11 @@ export class MainPage {
     this.locations = [];
   }
 
+  // Update screen according to new location
   setCurrentLocation(location) {
+    console.log("!!!DEMO : setCurrentLocation, location: { " + location.latitude + ", ", location.longitude + "}");
+
+    // Draw path into map
   }
 
   onGetLocations() {
@@ -202,8 +203,7 @@ export class MainPage {
     BackgroundGeolocation.getLocations()
       .then(
         (res) => {
-          console.log("On Get Locations : " + res);
-
+          console.log(res);
         }
       )
       .catch(

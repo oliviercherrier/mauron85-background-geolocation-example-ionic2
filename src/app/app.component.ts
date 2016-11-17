@@ -8,8 +8,8 @@ import {MainPage} from '../pages/main-page/main-page';
   template: `<ion-nav [root]="rootPage"></ion-nav>`
 })
 export class MyApp {
-  is_ios: any;
-  events: any;
+  is_ios: boolean;
+  events: Events;
 
   rootPage = MainPage;
 
@@ -28,7 +28,7 @@ export class MyApp {
     // Okay, so the platform is ready and our plugins are available.
     // Here you can do any higher level native things you might need.
     StatusBar.styleDefault();
-   // Splashscreen.hide();
+    Splashscreen.hide();
 
     console.log("BackgroundGeolocation : " + BackgroundGeolocation);
 
