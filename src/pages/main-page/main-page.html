@@ -1,0 +1,68 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Geolocation</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+
+  <div id="mapid" style="height: 250px;"></div>
+
+
+  <ion-item>
+    <h2>Locations</h2>
+  </ion-item>
+
+  <ion-list>
+
+    <ion-item *ngFor="let item of locations">
+      {{item.position.latitude}}, {{item.position.longitude}}
+    </ion-item>
+
+  </ion-list>
+</ion-content>
+
+<ion-footer class="bar-dark">
+
+  <ion-item>
+    <button (click)="onClickHome()">
+      <ion-icon name="locate"></ion-icon>
+    </button>
+    <button outline
+            (click)="onClickReset()">
+      Reset
+    </button>
+
+    <button outline
+          *ngIf="is_not_android"
+          style="color: {{pace.color}}"
+          (click)="onClickChangePace()">
+      {{pace.text}}
+    </button>
+
+    <button  style="{{toggle.color}}" outline
+            (click)="onClickToogleEnabled()">
+      {{toggle.text}}
+    </button>
+
+    <button outline
+      *ngIf="!is_not_android"
+      (click)="onGetLocations()">
+      Get Locations
+    </button>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>Collect</ion-label>
+    <ion-toggle disabled checked="false"></ion-toggle>
+  </ion-item>
+
+  <ion-item>
+    <ion-select [(ngModel)]="provider">
+      <ion-option value="df">ANDROID_DISTANCE_FILTER</ion-option>
+      <ion-option value="fl">ANDROID_FUSED_LOCATION</ion-option>
+    </ion-select>
+    <ion-label>Provider</ion-label>
+  </ion-item>
+
+</ion-footer>
