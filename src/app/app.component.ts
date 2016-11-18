@@ -34,9 +34,9 @@ export class MyApp {
 
     let config = {
       desiredAccuracy: 10,
-      stationaryRadius: 50,
-      distanceFilter: 50,
-      locationTimeout: 30,
+      stationaryRadius: 3,
+      distanceFilter: 2,
+      interval: 10000,
       notificationIcon: 'mappointer',
       notificationIconColor: '#FEDD1E',
       notificationTitle: 'Background tracking', // <-- android only, customize the title of the notification

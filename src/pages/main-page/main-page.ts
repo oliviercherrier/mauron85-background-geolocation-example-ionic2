@@ -5,6 +5,8 @@ import {Dialogs} from 'ionic-native';
 
 import * as L from 'leaflet';
 
+declare var omnivore: any;
+
 let PERMISSION_DENIED = 1;
 let POSITION_UNAVAILABLE = 2;
 let TIMEOUT = 3;
@@ -72,6 +74,21 @@ export class MainPage {
   ionViewDidEnter (){
     this.map = L.map('mapid').setView([51.505, -0.09], 13);
     L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png").addTo(this.map);
+    var latlngs = [
+        [48.787105, 2.456750],
+        [48.780757, 2.459475],
+        [48.767011, 2.472028]
+    ];
+    var polyline = L.polyline(latlngs, {color: 'red'}).addTo(this.map);
+    // zoom the map to the polyline
+    this.map.fitBounds(polyline.getBounds());
+
+    /*let runLayer = omnivore.gpx("assets/gpx/Mollard.gpx");
+    runLayer.on('ready', () => {
+        this.map.fitBounds(runLayer.getBounds());
+      });
+    runLayer.addTo(this.map);*/
+
   }
 
   bindEvents() {
@@ -192,11 +209,22 @@ export class MainPage {
 
   // Update screen according to new location
   setCurrentLocation(location) {
-    console.log("!!!DEMO : setCurrentLocation, location: { " + Number(location["latitude"]) + ", ", Number(location["longitude"]) + "}");
+    console.log("!!!DEMO : setCurrentLocation, location: { " + Number(location.latitude) + ", ", Number(location.longitude) + "}");
     console.log(location);
+
     // Draw path into map
+    BackgroundGeolocation.getLocations().then(
+      (res) => {
+        this.updateLeafletMap(res);
+      }
+    );
   }
 
+  updateLeafletMap(locations){
+
+  }
+
+  // Only used for non android device
   onGetLocations() {
 
     BackgroundGeolocation.getLocations()
