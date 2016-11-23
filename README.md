@@ -4,6 +4,8 @@
 
 Provide an example of applicationn that integrate cordova-plugin-mauron85-background-geolocation (free version) into Ionic 2
 
+![](https://github.com/oliviercherrier/mauron85-background-geolocation-example-ionic2/blob/master/docs/img/ScreenShot-London-Blank.png)
+
 ## Installing the application
 
 * `git clone https://github.com/oliviercherrier/mauron85-background-geolocation-example-ionic2`
