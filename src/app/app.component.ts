@@ -30,18 +30,18 @@ export class MyApp {
     StatusBar.styleDefault();
     Splashscreen.hide();
 
-    console.log("BackgroundGeolocation : " + BackgroundGeolocation);
-
     let config = {
       desiredAccuracy: 10,
       stationaryRadius: 3,
       distanceFilter: 2,
-      interval: 10000,
+      interval: 1000,
       notificationIcon: 'mappointer',
       notificationIconColor: '#FEDD1E',
       notificationTitle: 'Background tracking', // <-- android only, customize the title of the notification
       notificationText: 'ENV.settings.locationService', // <-- android only, customize the text of the notification
-      activityType: 'AutomotiveNavigation',
+      activityType: 'Fitness',
+      // url: "http://192.168.0.14:3000/locations", 
+      url: "http://vps342125.ovh.net/locations", 
       debug: true, // <-- enable this hear sounds for background-geolocation life-cycle.
       stopOnTerminate: false, // <-- enable this to clear background location settings when the app terminates
       locationService: 0, // ANDROID_DISTANCE_FILTER
@@ -49,9 +49,9 @@ export class MyApp {
       activitiesInterval: 10000
     };
 
-    console.log("onDeviceReady : this=" + this);
-
     BackgroundGeolocation.configure((location) => {this.onBGeoCallback(location);}, (err)=>{this.onBGeoError(err);}, config);
+
+    console.log("!!!INFO: onDeviceReady ended");
 
   }
 

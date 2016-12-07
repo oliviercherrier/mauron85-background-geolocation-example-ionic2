@@ -1,7 +1,8 @@
 import {NavController, Toast, Events, Platform, App} from 'ionic-angular';
 import { Component } from '@angular/core';
-import {BackgroundGeolocation, Geolocation} from 'ionic-native';
+import {BackgroundGeolocation, Geolocation, Device} from 'ionic-native';
 import {Dialogs} from 'ionic-native';
+import { PathService } from '../../services/path-service';
 
 import * as L from 'leaflet';
 
@@ -12,7 +13,9 @@ let POSITION_UNAVAILABLE = 2;
 let TIMEOUT = 3;
 
 @Component({
-  templateUrl: 'main-page.html'
+  templateUrl: 'main-page.html',
+  providers: [PathService]
+
 })
 export class MainPage {
   private app: App;
@@ -20,6 +23,8 @@ export class MainPage {
   private nav: NavController;
   private events: Events;
   public locations; // Polyline for leaflet
+  private pathService: PathService;
+
   options: any;
   is_not_android: any;
   path: any;
@@ -33,14 +38,16 @@ export class MainPage {
   provider: any;
 
   static get parameters() {
-    return [[NavController], [Events], [Platform]];
+    return [[NavController], [Events], [Platform], [App], [PathService]];
   }
-  constructor(_nav: NavController, _events: Events, _platform: Platform, _app: App) {
+  
+  constructor( _nav: NavController, _events: Events, _platform: Platform, _app: App, _pathService: PathService) {
     this.app = _app;
     this.nav = _nav;
     this.events = _events;
     this.is_not_android = !_platform.is('android');
-
+    this.pathService = _pathService;
+    
     this.options = {
       timeout: 10000,
       enableHighAccuracy: true,
@@ -125,6 +132,14 @@ export class MainPage {
 
   startTracking() {
     console.log("!!!DEMO : Start tracking");
+
+    // Create a new path
+    this.pathService
+          .Add(Device.device.uuid)
+          .subscribe(
+            () => {} ,
+            error => console.log(error));
+
     BackgroundGeolocation.start();
     this.isTracking = true;
     BackgroundGeolocation.isLocationEnabled().then(
@@ -178,7 +193,7 @@ export class MainPage {
           console.log("!!!DEMO : On position unavailable -> switch on location, activate gps, wifi network");
           this.showToast("On position unavailable -> switch on location, activate gps, wifi network");
         } else if ( error.code == TIMEOUT ) {
-          console.log("!!!DEMO : On timeout -> switch on location, activate gps, wifi network -> wait");
+            console.log("!!!DEMO : On timeout -> switch on location, activate gps, wifi network -> wait");
           this.showToast("On timeout -> switch on location, activate gps, wifi network -> wait");
         }
       });
@@ -191,8 +206,7 @@ export class MainPage {
 
   // Update screen according to new location
   setCurrentLocation(location) {
-    console.log("!!!DEMO : setCurrentLocation, location: { " + Number(location.latitude) + ", ", Number(location.longitude) + "}");
-    console.log(location);
+    console.log("!!!DEMO : setCurrentLocation, location: { " + Number(location.latitude) + ", " + Number(location.longitude) + "}");
     
     // Update leaflet map
     this.locations.addLatLng([location.latitude, location.longitude]);
