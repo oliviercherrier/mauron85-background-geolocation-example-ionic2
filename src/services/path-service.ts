@@ -15,7 +15,8 @@ export class PathService {
     private headers: Headers;
 
     constructor(private _http: Http) {  
-        this.actionUrl = "http://vps342125.ovh.net:3000/path/";
+        // this.actionUrl = "http://vps342125.ovh.net:3000/path/";
+        this.actionUrl = "http://192.168.0.14:3000/path/";
 
         this.headers = new Headers();
         this.headers.append('Content-Type', 'application/json');

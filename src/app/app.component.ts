@@ -1,30 +1,50 @@
 import { Component } from '@angular/core';
 import { Platform , Events} from 'ionic-angular';
-import { StatusBar, Splashscreen, BackgroundGeolocation } from 'ionic-native';
+import { StatusBar, Splashscreen, BackgroundGeolocation, Device } from 'ionic-native';
 import {MainPage} from '../pages/main-page/main-page';
-
+import {RegisteringPage} from '../pages/registering-page/registering-page';
+import {UserService} from '../services/user-service';
 
 @Component({
-  template: `<ion-nav [root]="rootPage"></ion-nav>`
+  template: `<ion-nav [root]="rootPage"></ion-nav>`,
+  providers: [UserService]
 })
 export class MyApp {
   is_ios: boolean;
   events: Events;
+  userService: UserService;
 
-  rootPage = MainPage;
+
+  rootPage: any;
 
   static get parameters() {
-    return [[Platform], [Events]];
+    return [[Platform], [Events], [UserService]];
   }
   
-  constructor(platform: Platform, events: Events) {
-    this.rootPage = MainPage;
+  constructor(platform: Platform, events: Events, _userService: UserService) {
+    this.userService = _userService;
+    
+    //this.rootPage = MainPage;
+
     this.events = events;
     this.is_ios = platform.is('ios');
     platform.ready().then(() => {this.onDeviceReady();});
   }
 
   onDeviceReady() {
+    //Control if user is already registered
+    this.userService.get(Device.device.uuid).subscribe( 
+      (user) => {
+        if(user.phone_uuid){
+          this.rootPage = MainPage;
+        }
+        else{
+          this.rootPage = RegisteringPage;
+        }
+      },
+      (e) => {console.log(e)}
+    );
+
     // Okay, so the platform is ready and our plugins are available.
     // Here you can do any higher level native things you might need.
     StatusBar.styleDefault();

@@ -36,10 +36,6 @@ export class MainPage {
   locationAccuracy: any;
   previousLocation: any;
   provider: any;
-
-  static get parameters() {
-    return [[NavController], [Events], [Platform], [App], [PathService]];
-  }
   
   constructor( _nav: NavController, _events: Events, _platform: Platform, _app: App, _pathService: PathService) {
     this.app = _app;
