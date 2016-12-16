@@ -55,13 +55,14 @@ export class MyApp {
       stationaryRadius: 3,
       distanceFilter: 2,
       interval: 1000,
+      httpHeaders: { 'DEVICE_UUID': Device.device.uuid},
       notificationIcon: 'mappointer',
       notificationIconColor: '#FEDD1E',
       notificationTitle: 'Background tracking', // <-- android only, customize the title of the notification
       notificationText: 'ENV.settings.locationService', // <-- android only, customize the text of the notification
       activityType: 'Fitness',
-      // url: "http://192.168.0.14:3000/locations", 
-      url: "http://vps342125.ovh.net/locations", 
+      url: "http://192.168.0.14:3000/mauron85-bgeoloc-api/locations", 
+      // url: "http://vps342125.ovh.net/locations", 
       debug: true, // <-- enable this hear sounds for background-geolocation life-cycle.
       stopOnTerminate: false, // <-- enable this to clear background location settings when the app terminates
       locationService: 0, // ANDROID_DISTANCE_FILTER

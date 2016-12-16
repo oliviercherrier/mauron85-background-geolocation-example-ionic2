@@ -131,7 +131,7 @@ export class MainPage {
 
     // Create a new path
     this.pathService
-          .Add(Device.device.uuid)
+          .Open(Device.device.uuid)
           .subscribe(
             () => {} ,
             error => console.log(error));
@@ -148,6 +148,12 @@ export class MainPage {
     console.log("!!!DEMO : Stop tracking");
     BackgroundGeolocation.stop();
     this.isTracking = false;
+
+    this.pathService
+      .Close(Device.device.uuid)
+      .subscribe(
+        () => {} ,
+        error => console.log(error));
   }
 
   onLocationCheck(enabled) {
