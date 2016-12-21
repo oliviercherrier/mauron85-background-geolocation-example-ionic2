@@ -33,15 +33,16 @@ export class UserService {
     public getAll = (): Observable<User[]> => {
         let users$ = this._http
             .get(`${this.actionUrl}`, {headers: this.getHeaders()})
-            .map(mapUsers).catch(this.handleError);
-
+            .map((response: Response) => <User[]>response.json()).catch(this.handleError);
         return users$;
     }
 
     public get = (phone_uuid: String): Observable<User> => {
         let user$ = this._http
             .get(`${this.actionUrl}/${phone_uuid}`, {headers: this.getHeaders()})
-            .map(mapUser).catch(this.handleError);
+            .map((response: Response) => {
+                if (response.status != 204) {return <User>response.json()} else { return undefined}
+            }).catch(this.handleError);
         return user$;
     }
 
@@ -57,26 +58,3 @@ export class UserService {
     }
 
 }
-
-function toUser(r:any): User{
-    let user = <User>({
-        first_name: r.first_name,
-        last_name: r.last_name,
-        nickname: r.nickname,
-        phone_uuid: r.phone_uuid,
-        email: r.email
-    });
-    return user;
-}
-
-function mapUsers(response:Response): User[]{
-    return response.json().map(toUser);
-}
-
-function mapUser(response:Response): User{
-    // If request fails, throw an Error that will be caught
-    if(response.status == 204) {
-        return undefined;
-    } 
-    return toUser(response.json());
-}   
