@@ -35,7 +35,7 @@ export class MyApp {
     //Control if user is already registered
     this.userService.get(Device.device.uuid).subscribe( 
       (user) => {
-        if(user.phone_uuid){
+        if(user){
           this.rootPage = MainPage;
         }
         else{

@@ -17,7 +17,7 @@ export class UserService {
     private headers: Headers;
 
     constructor(private _http: Http) {  
-        this.actionUrl = "http://192.168.0.14:3000/users/";
+        this.actionUrl = "http://192.168.43.103:3000/mauron85-bgeoloc-api/users";
 
         this.headers = new Headers();
         this.headers.append('Content-Type', 'application/json');
@@ -30,19 +30,18 @@ export class UserService {
             catch(this.handleError);
     }
     
-    getAll(): Observable<User[]>{
+    public getAll = (): Observable<User[]> => {
         let users$ = this._http
             .get(`${this.actionUrl}`, {headers: this.getHeaders()})
-            .map(mapUsers);
+            .map(mapUsers).catch(this.handleError);
 
         return users$;
     }
 
-    get(phone_uuid: String): Observable<User> {
+    public get = (phone_uuid: String): Observable<User> => {
         let user$ = this._http
-            .get(`${this.actionUrl}${phone_uuid}`, {headers: this.getHeaders()})
-            .map(mapUser);
-
+            .get(`${this.actionUrl}/${phone_uuid}`, {headers: this.getHeaders()})
+            .map(mapUser).catch(this.handleError);
         return user$;
     }
 
@@ -53,17 +52,13 @@ export class UserService {
     }
 
     private handleError(error: Response) {
-        console.error(error);
-        return Observable.throw(error.json().error || 'Server error');
+        console.log(error);
+        return Observable.throw(error);
     }
 
 }
 
 function toUser(r:any): User{
-    // Huggly hack because r is an array
-    if (r[0]){
-        r = r[0]
-    }
     let user = <User>({
         first_name: r.first_name,
         last_name: r.last_name,
@@ -75,12 +70,13 @@ function toUser(r:any): User{
 }
 
 function mapUsers(response:Response): User[]{
-    // The response of the API has a results
-    // property with the actual results
-    return response.json().results.map(toUser)
+    return response.json().map(toUser);
 }
 
 function mapUser(response:Response): User{
-    // toPerson looks just like in the previous example
+    // If request fails, throw an Error that will be caught
+    if(response.status == 204) {
+        return undefined;
+    } 
     return toUser(response.json());
 }   
