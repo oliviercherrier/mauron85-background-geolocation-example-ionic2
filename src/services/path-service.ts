@@ -1,6 +1,7 @@
 import { Injectable, Component } from '@angular/core';
 import { Http, Response, Headers } from '@angular/http';
-
+                import {Config} from '../config/config';
+                
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
@@ -15,8 +16,9 @@ export class PathService {
     private headers: Headers;
 
     constructor(private _http: Http) {  
-        // this.actionUrl = "http://vps342125.ovh.net:3000/path/";
-        this.actionUrl = "http://192.168.0.14:3000/mauron85-bgeoloc-api/path";
+
+        this.actionUrl = Config.REST_API_ADDRESS + "/path";
+
 
         this.headers = new Headers();
         this.headers.append('Content-Type', 'application/json');

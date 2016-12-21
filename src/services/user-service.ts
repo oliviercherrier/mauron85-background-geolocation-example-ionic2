@@ -2,7 +2,7 @@
 
 import { Injectable, Component } from '@angular/core';
 import { Http, Response, Headers } from '@angular/http';
-
+import {Config} from '../config/config'
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
@@ -17,7 +17,7 @@ export class UserService {
     private headers: Headers;
 
     constructor(private _http: Http) {  
-        this.actionUrl = "http://192.168.43.103:3000/mauron85-bgeoloc-api/users";
+        this.actionUrl = Config.REST_API_ADDRESS + "/users";
 
         this.headers = new Headers();
         this.headers.append('Content-Type', 'application/json');
